@@ -69,6 +69,42 @@ def get_sensor_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/sensor_data', methods=['GET'])    
+def get_all_sensor_data():
+    try:
+        # Koneksi ke database
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="pemdas"
+        )
+        cursor = conn.cursor(dictionary=True)
+
+        # Ambil semua data dari tabel
+        cursor.execute('SELECT * FROM sensor_data ORDER BY id DESC')
+        results = cursor.fetchall()
+
+        conn.close()
+
+        # Jika tidak ada data
+        if not results:
+            return jsonify({'error': 'No data found'}), 404
+
+        # Mengembalikan seluruh data dalam format JSON
+        return jsonify([
+            {
+                'id': row['id'],
+                'temperature': row['temperature'],
+                'humidity': row['humidity'],
+                'gas_detected': bool(row['gas_detected']),
+                'flame_detected': bool(row['flame_detected']),
+                'timestamp': row['timestamp']
+            } for row in results
+        ])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/sensor_data', methods=['POST'])
 def post_sensor_data():
     try:
