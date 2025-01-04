@@ -1,36 +1,35 @@
-// Fungsi untuk melakukan fetching data dari endpoint
 async function fetchSensorData() {
-  try {
-    // Kirim permintaan GET ke endpoint
-    const response = await fetch("http://127.0.0.1:5000/sensor_data");
-
-    // Periksa apakah respons berhasil
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    try {
+      const response = await fetch("http://127.0.0.1:5000/sensor_data");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Data Sensor:", data);
+      return data;
+    } catch (error) {
+      console.error("Terjadi kesalahan saat fetching data:", error);
     }
-
-    // Parsing data ke format JSON
-    const data = await response.json();
-
-    // Menampilkan data di console
-    console.log("Data Sensor:", data);
-
-    // Mengembalikan data untuk diproses lebih lanjut
-    return data;
-  } catch (error) {
-    // Tangani kesalahan jika ada
-    console.error("Terjadi kesalahan saat fetching data:", error);
   }
-}
-let a = document.createElement("h1");
-let b = document.querySelector("body");
-let c = document.createElement("h1");
-b.appendChild(a);
-b.appendChild(c);
-async function tampildata() {
-  const data = await fetchSensorData();
-  a.textContent = `humidity : ${data.humidity}`;
-  c.textContent = `temperatur : ${data.temperature}`;
-}
 
-setInterval(tampildata, 1000);
+  // Fungsi untuk menampilkan data ke dalam tabel
+  async function tampildata() {
+    const data = await fetchSensorData();
+    const tableBody = document.querySelector("#dataTable tbody");
+    tableBody.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
+
+    const rows = [
+      { sensor: "Humidity", value: data.humidity, status: data.humidity > 70 ? "Bahaya" : "Aman" },
+      { sensor: "Temperature", value: data.temperature, status: data.temperature > 50 ? "Bahaya" : "Aman" },
+      { sensor: "Gas Detected", value: data.gas_detected, status: data.gas_detected == 1 ? "Bahaya" : "Aman" },
+      { sensor: "Fire Detected", value: data.flame_detected, status: data.flame_detected == 1 ? "Bahaya" : "Aman" }
+    ];
+
+    rows.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${row.sensor}</td><td>${row.value}</td><td>${row.status}</td>`;
+      tableBody.appendChild(tr);
+    });
+  }
+
+  setInterval(tampildata, 1000);

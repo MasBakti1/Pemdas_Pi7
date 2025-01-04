@@ -39,7 +39,7 @@ def index():
 
 @app.route('/sensor_data', methods=['GET'])
 def get_sensor_data():
-    temperature = 80
+    temperature = 80 
     humidity =  70
     gas_detected = True
     flame_detected = False
