@@ -69,7 +69,7 @@ def get_sensor_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/sensor_data', methods=['GET'])    
+@app.route('/history_data', methods=['GET'])    
 def get_all_sensor_data():
     try:
         # Koneksi ke database
@@ -105,6 +105,35 @@ def get_all_sensor_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/sensor_data', methods=['POST'])
+def post_sensor_data():
+    try:
+        data = request.get_json()
+        temperature = data.get('temperature')
+        humidity = data.get('humidity')
+        gas_detected = data.get('gas_detected')
+        flame_detected = data.get('flame_detected')
+
+        # Insert data into the database
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="pemdas"
+        )
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO sensor_data (temperature, humidity, gas_detected, flame_detected)
+            VALUES (%s, %s, %s, %s)
+        ''', (temperature, humidity, gas_detected, flame_detected))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': 'Data inserted successfully'}), 201
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    
 @app.route('/sensor_data', methods=['POST'])
 def post_sensor_data():
     try:
