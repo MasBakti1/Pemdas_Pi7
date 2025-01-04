@@ -39,17 +39,35 @@ def index():
 
 @app.route('/sensor_data', methods=['GET'])
 def get_sensor_data():
-    temperature = 80 
-    humidity =  70
-    gas_detected = True
-    flame_detected = False
+    try:
+        # Koneksi ke database
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="pemdas"
+        )
+        cursor = conn.cursor(dictionary=True)
 
-    return jsonify({
-        'temperature': temperature,
-        'humidity': humidity,
-        'gas_detected': bool(gas_detected == 0),
-        'flame_detected': bool(flame_detected == 0)
-    })
+        # Ambil data terbaru dari tabel sensor_data
+        cursor.execute('SELECT * FROM sensor_data ORDER BY id DESC LIMIT 1')
+        result = cursor.fetchone()
+
+        conn.close()
+
+        # Jika tidak ada data
+        if not result:
+            return jsonify({'error': 'No data found'}), 404
+
+        # Mengembalikan data dalam format JSON
+        return jsonify({
+            'temperature': result['temperature'],
+            'humidity': result['humidity'],
+            'gas_detected': bool(result['gas_detected']),
+            'flame_detected': bool(result['flame_detected'])
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/sensor_data', methods=['POST'])
 def post_sensor_data():
