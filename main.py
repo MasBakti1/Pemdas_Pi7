@@ -5,6 +5,7 @@ import time
 import threading
 from flask_cors import CORS
 import mysql.connector
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -133,6 +134,36 @@ def post_sensor_data():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-    
+
+@app.route('/get-min-max', methods=['GET'])
+def minmax():
+    try:
+        conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="pemdas"
+            )
+        
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT MAX(temperature) AS max_value, MIN(temperature) AS min_value, MAX(humidity) AS max_hum, MIN(humidity) AS min_hum FROM sensor_data WHERE DATE(timestamp) = CURDATE()"
+        cursor.execute(query)
+        result = cursor.fetchone() 
+        
+        conn.close
+        
+        if result:
+            return jsonify({'max': result['max_value'], 
+                            'min': result['min_value'],
+                            'max_hum' : result['max_hum'],
+                            'min_hum' : result['min_hum']})
+        else:
+            return jsonify({'error': 'No data found'}), 404
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

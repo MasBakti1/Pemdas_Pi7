@@ -52,7 +52,6 @@
     </style>
   </head>
   <body style="background-color: rgb(226, 226, 226);">
-  
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Monitoring Kebakaran</a>
@@ -67,7 +66,7 @@
             <div class=" rounded d-flex align-items-center" style="padding: 8px; padding-right: 15px; gap: 10px;">
                 <i class="bi bi-thermometer-low" style="font-size: 40px;"></i>
                 <h3 class="card-header">Temperature</h3>                
-                <h5 id="temperatureVal" class="ms-auto mb-0">  </h5>
+                <h5 id="temperatureVal" class="ms-auto mb-0"> a </h5>
             </div>
           </div>
           <div class="row mb-3" style="background-color: white;">
@@ -99,23 +98,25 @@
               <h1 id="overallStatus" class="text-center"></h1>
             </div>
           </div>
-      
-          <script src="script.js"></script>
-
         </div>
         <div class="col-lg-8">
-          <div class="card" style="border-radius: 0px; height: 85vh;">
+          <div class="card" style="border-radius: 0px; height: 90vh;">
             <h3 class="d-flex justify-content-center" style="padding-top: 10px;">Riwayat Data</h3>
             <div class="card-body">
               <div id="chartContainer" class="row">
                 <canvas id="historyChart"></canvas>
+                <h6>Tanggal  <span id="current_date"></span></h6>
+                <h6>Temp MAX = <span id="max_value">N/A</span> &nbsp;&nbsp; Hum MAX = <span id="max_hum">N/A</span></h6>
+                <h6>Temp MIN = <span id="min_value">N/A</span> &nbsp;&nbsp;&nbsp; Hum MIN = <span id="min_hum">N/A</span></h6>
               </div>
-        
-              <script src="script2.js"></script>
             </div>
           </div>
         </div>
       </div>
-
   </body>
 </html>
+
+<script src="script.js"></script>
+<script src="maxmin.js"></script>
+<script src="script2.js"></script>
+<script src="currentdate.js"></script>
