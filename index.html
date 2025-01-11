@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <html>
   <head>
     <title>Raspberry Pi Live Video Feed</title>
@@ -6,4 +7,36 @@
     <h1>Raspberry Pi Live Video Feed</h1>
   </body>
   <script src="script.js"></script>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ambil Data dari MySQL</title>
+</head>
+<body>
+    <h1>Data dari Database</h1>
+    <div id="data-container"></div>
+
+    <script>
+        // URL ke API PHP
+        const apiUrl = 'http://errors.infinityfree.net/api.php';
+
+        // Mengambil data dari API
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Tampilkan data di console
+                const container = document.getElementById('data-container');
+
+                // Menampilkan data di halaman
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = `ID: ${item.id}, Name: ${item.name}`;
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+>>>>>>> Stashed changes
 </html>
